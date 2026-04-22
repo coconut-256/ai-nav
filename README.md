@@ -38,12 +38,12 @@ npm run docs:preview  # 预览 .vitepress/dist/
 ├── Vibe Coding 零基础教程/       # Vibe Coding 零基础教程
 ├── translations/               # 译文
 ├── image/                      # 图片资源
+├── public/                     # favicon、robots、站长验证等静态资源
 ├── .vitepress/
 │   ├── config.ts               # 主配置
 │   ├── navbar.ts / sidebar.ts  # 顶栏 / 侧栏
 │   ├── theme/                  # 自定义主题
-│   ├── scripts/                # Node 构建脚本
-│   └── public/                 # favicon、robots、站长验证
+│   └── scripts/                # Node 构建脚本
 └── .github/workflows/          # 后端增量同步
 ```
 

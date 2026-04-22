@@ -1,0 +1,29 @@
+<svg width="320" height="320" viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="logoTitle logoDesc">
+  <title id="logoTitle">AI Nav Logo</title>
+  <desc id="logoDesc">A circular site logo with layered gradients and an AI monogram.</desc>
+  <defs>
+    <linearGradient id="bgGradient" x1="46" y1="36" x2="272" y2="290" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFB648"/>
+      <stop offset="0.55" stop-color="#FF7A59"/>
+      <stop offset="1" stop-color="#1E6BFF"/>
+    </linearGradient>
+    <linearGradient id="ringGradient" x1="76" y1="72" x2="248" y2="250" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF7DB"/>
+      <stop offset="1" stop-color="#D7F4FF"/>
+    </linearGradient>
+    <filter id="shadow" x="24" y="24" width="272" height="272" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#0B1B38" flood-opacity="0.16"/>
+    </filter>
+  </defs>
+
+  <rect width="320" height="320" rx="76" fill="url(#bgGradient)"/>
+
+  <g filter="url(#shadow)">
+    <circle cx="160" cy="160" r="104" fill="url(#ringGradient)"/>
+    <circle cx="160" cy="160" r="88" fill="#0F172A" fill-opacity="0.92"/>
+    <circle cx="116" cy="116" r="24" fill="#FFF4C2" fill-opacity="0.95"/>
+    <circle cx="210" cy="100" r="14" fill="#9BE7FF" fill-opacity="0.9"/>
+    <path d="M112 219L147.2 101H172.5L207.5 219H184.5L177.3 192.6H141.5L133.9 219H112ZM146.5 173.5H172.4L159.7 126.1H159L146.5 173.5Z" fill="#F8FAFC"/>
+    <path d="M216.5 101H238.5V219H216.5V101Z" fill="#F8FAFC"/>
+  </g>
+</svg>

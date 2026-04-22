@@ -19,7 +19,7 @@ export default defineConfig({
   srcExclude: ['CLAUDE.md', 'README.md', '**/node_modules/**'],
 
   head: [
-    ['link', { rel: 'icon', href: '/favicon.ico' }],
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo.svg' }],
     ['meta', { name: 'viewport', content: 'width=device-width,initial-scale=1,user-scalable=no' }],
     ['meta', { name: 'keywords', content: 'AI,可可耐特,knowledge,navigation,Vibe Coding,OpenClaw' }],
     ['meta', { name: 'author', content: 'coconut-256' }],
@@ -86,7 +86,16 @@ export default defineConfig({
     const title = fm.title || pageData.title || siteConfig.site.title
     const desc = fm.description || pageData.description || siteConfig.site.description
     const url = SITE_URL + '/' + pageData.relativePath.replace(/\.md$/, '.html')
-    const image = fm.image ? SITE_URL + fm.image : undefined
+    const frontmatterImage = typeof fm.image === 'string'
+      ? fm.image
+      : typeof fm.image === 'object' && fm.image && 'src' in fm.image && typeof fm.image.src === 'string'
+        ? fm.image.src
+        : undefined
+    const image = frontmatterImage
+      ? /^https?:\/\//.test(frontmatterImage)
+        ? frontmatterImage
+        : SITE_URL + frontmatterImage
+      : undefined
 
     const tags: [string, Record<string, string>][] = [
       ['meta', { property: 'og:title', content: title }],
@@ -128,7 +137,7 @@ export default defineConfig({
   },
 
   themeConfig: {
-    logo: '/logo.png',
+    logo: '/logo.svg',
     siteTitle: SITE_TITLE,
     nav: navbar,
     sidebar,

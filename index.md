@@ -5,7 +5,7 @@ hero:
   name: 可可耐特 AI 知识库
   tagline: AI · 编程 · 产品 · 教程 —— 开源共建的中文知识库
   image:
-    src: /logo.png
+    src: /logo.svg
     alt: 可可耐特
   actions:
     - theme: brand
