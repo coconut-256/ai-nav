@@ -1,9 +1,12 @@
-const fs = require('fs')
-const path = require('path')
+import fs from 'node:fs'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 const ROOT = path.resolve(__dirname, '../../')
 
-const IGNORE = new Set(['.vuepress', 'node_modules', 'image', '.git', '.github', 'translations'])
+const IGNORE = new Set(['.vuepress', '.vitepress', 'node_modules', 'image', '.git', '.github'])
 
 function isMarkdownFile (name) {
   return name.endsWith('.md') && name.toLowerCase() !== 'readme.md'
@@ -22,54 +25,56 @@ function extractTitle (absPath) {
   return path.basename(absPath, '.md')
 }
 
+// 递归生成 VitePress 侧边栏项：{ text, link } 或 { text, collapsed, items: [...] }
 function buildGroup (absDir, relBase) {
   const entries = readDirSafe(absDir).filter(e => !e.name.startsWith('.') && !IGNORE.has(e.name))
 
-  const files = entries.filter(e => e.isFile() && isMarkdownFile(e.name))
+  const files = entries
+    .filter(e => e.isFile() && isMarkdownFile(e.name))
     .sort((a, b) => a.name.localeCompare(b.name, 'zh'))
     .map(e => {
       const abs = path.join(absDir, e.name)
-      const link = `${relBase}${e.name.replace(/\.md$/, '.html')}`
-      return [link, extractTitle(abs)]
+      const link = `${relBase}${e.name.replace(/\.md$/, '')}`
+      return { text: extractTitle(abs), link }
     })
 
-  const subDirs = entries.filter(e => e.isDirectory())
+  const subDirs = entries
+    .filter(e => e.isDirectory())
     .sort((a, b) => a.name.localeCompare(b.name, 'zh'))
     .map(e => {
       const sub = path.join(absDir, e.name)
       const subRel = `${relBase}${e.name}/`
       return {
-        title: e.name,
-        collapsable: true,
-        children: buildGroup(sub, subRel)
+        text: e.name,
+        collapsed: true,
+        items: buildGroup(sub, subRel)
       }
     })
 
-  // 目录下若存在 README.md 作为组首页
-  const hasReadme = fs.existsSync(path.join(absDir, 'README.md'))
-  const children = []
-  if (hasReadme) children.push(relBase)
-  children.push(...files)
-  children.push(...subDirs)
-  return children
+  const items = []
+  // 目录下若存在 README.md，作为该组索引页（VitePress 以目录根路径解析 index/README）
+  if (fs.existsSync(path.join(absDir, 'README.md'))) {
+    items.push({ text: '概览', link: relBase })
+  }
+  items.push(...files)
+  items.push(...subDirs)
+  return items
 }
 
-function generateSidebarConfig (dirName) {
+export function generateSidebarConfig (dirName) {
   const absDir = path.join(ROOT, dirName)
   const relBase = `/${dirName}/`
   return [
     {
-      title: dirName,
-      collapsable: false,
-      children: buildGroup(absDir, relBase)
+      text: dirName,
+      collapsed: false,
+      items: buildGroup(absDir, relBase)
     }
   ]
 }
 
-module.exports = { generateSidebarConfig }
-
 // 命令行入口：打印各目录侧边栏
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   const dirs = ['AI', '产品服务', 'OpenClaw 保姆级教程', 'Vibe Coding 零基础教程', 'translations']
   const out = {}
   dirs.forEach(d => { out[`/${d}/`] = generateSidebarConfig(d) })

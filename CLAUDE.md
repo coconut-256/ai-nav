@@ -7,83 +7,100 @@
 - 仓库地址：`coconut-256/ai-nav`
 - 线上域名：<https://ai.nav.cn>
 
-## 二、核心框架
+## 二、核心框架（2026 最新适配）
+
+本项目已从 VuePress 1（Vue 2 生态，官方已废弃）迁移到 **VitePress**（Vue 团队官方维护、Vue 3 + Vite 的静态站点生成器）。
 
 | 技术 | 版本 | 用途 |
 | --- | --- | --- |
-| VuePress | ^1.9.10 | 核心静态站点生成器，基于 Vue 2 生态 |
-| Vue.js 2 | VuePress 1 自带 | 驱动主题组件（`.vue` 单文件组件） |
-| TypeScript | 通过 ts-node | 编写配置文件（config / navbar / sidebar） |
-| Node.js | 16 | 构建运行时（见 `deploy.yml:18`） |
-| Stylus | `.styl` | 主题样式编写（`wrapper.styl`） |
-| Markdown | VuePress 内置 markdown-it | 内容主体，开启了行号与 h2-h6 抽取 |
+| VitePress | ^1.6.4 | 核心静态站点生成器，Vue 团队官方维护，取代 VuePress 1 |
+| Vue.js | ^3.5 | 驱动主题组件（`.vue` SFC + `<script setup>` + Composition API） |
+| Vite | ^5（VitePress 内置） | 构建与开发服务器，HMR ≈ 100ms |
+| TypeScript | ^5.4 | 编写配置文件（config / navbar / sidebar）与主题 |
+| Node.js | 20 LTS | 构建运行时（Vite 5 要求 Node ≥ 18，见 `deploy.yml`） |
+| CSS 变量 + 原生 CSS | — | 主题样式（VitePress 推荐，替代 VuePress 的 Stylus） |
+| Markdown | VitePress 内置 markdown-it | 内容主体，开启行号、frontmatter、代码组等 |
 
-## 三、自定义主题（继承默认主题）
+> 选型说明：Vue 团队已声明 VuePress 1 废弃、VuePress 2 由社区维护；Vue 官方文档本身已基于 VitePress。对于以 Markdown 为主的文档站，VitePress 提供更快的 DX、更精简的主题 API、以及与 Vite 生态完全一致的插件模型。
 
-在 `.vuepress/theme/index.js` 中通过 `extend: '@vuepress/theme-default'` 继承默认主题并做覆盖：
+## 三、自定义主题（继承 VitePress 默认主题）
 
-- **Layouts**：`Layout.vue`
-- **Components（10 个 Vue 组件）**：
-  - `Navbar.vue` / `NavLinks.vue` / `DropdownLink.vue`
-  - `Page.vue` / `PageSidebarToc.vue` / `PageSidebarTocLink.vue`
-  - `ExtraSidebar.vue`（右侧边栏，额外扩展）
-  - `Footer.vue`
-  - `AlgoliaSearchBox.vue`（预留 Algolia 搜索）
-  - `DropdownTransition.vue`
-- **Styles**：`wrapper.styl`（响应式布局）
-- **Util**：`util/index.js`
+在 `.vitepress/theme/index.ts` 中通过 `extends: DefaultTheme` 继承并做局部覆盖：
 
-## 四、VuePress 插件（共 11 个）
+- **Layout**：`Layout.vue`，通过 `DefaultTheme.Layout` 的插槽注入 `layout-top` / `layout-bottom` / `aside-outline-after` 等自定义区块
+- **Components（全部用 Vue 3 `<script setup>` 重写）**：
+  - `ExtraSidebar.vue`（右侧标签 / 友链面板，注入 `aside-outline-after` 插槽）
+  - `Footer.vue`（版权、ICP、友链，注入 `layout-bottom` 插槽）
+  - 顶部导航、下拉菜单、代码复制、返回顶部、搜索框等均直接复用 VitePress 默认主题（无需再自行实现）
+- **Styles**：`styles/custom.css`（通过 VitePress CSS 变量覆盖主题色、字体、布局宽度）
 
-### 官方插件（devDependencies）
+## 四、VitePress 原生能力 + 外部插件
 
-| 插件 | 作用 |
+VitePress 与 VuePress 最大的不同：**没有独立插件系统**，所有扩展通过「Vite 插件 / Vue 组件 / 构建钩子（`transformHtml`、`buildEnd`）/ markdown-it 插件」完成。
+
+### 由 VitePress 内置直接替换掉的旧插件
+
+| 旧插件（VuePress 1） | VitePress 内置替代方案 |
 | --- | --- |
-| `@vuepress/plugin-back-to-top` | 返回顶部按钮 |
-| `@vuepress/plugin-medium-zoom` | 图片点击放大 |
-| `@vuepress/plugin-google-analytics` | GA 统计（GTM-WVS9HM6W） |
+| `@vuepress/plugin-back-to-top` | 默认主题自带返回顶部 |
+| `vuepress-plugin-code-copy` | 默认主题自带代码块复制按钮 |
+| `vuepress-plugin-sitemap` | `config.sitemap: { hostname }`（VitePress ≥ 1.2 内置） |
+| `vuepress-plugin-seo` | `transformHead` 钩子 + frontmatter（内置） |
+| `@vuepress/plugin-google-analytics` | `head` 配置直接注入 GTM 脚本 |
 
-### 社区插件
+### 仍需要的外部包
 
-| 插件 | 作用 |
+| 包 | 作用 |
 | --- | --- |
-| `vuepress-plugin-seo` | 自动生成 SEO meta/og 标签 |
-| `vuepress-plugin-sitemap` | 生成 sitemap.xml |
-| `vuepress-plugin-feed` | 生成 RSS / Atom / JSON feed |
-| `vuepress-plugin-tags` | 文章标签系统 |
-| `vuepress-plugin-baidu-autopush` | 百度搜索自动推送收录 |
-| `vuepress-plugin-code-copy` | 代码块一键复制（提示"代码已复制"） |
-| `vuepress-plugin-img-lazy` | 图片懒加载 |
+| `medium-zoom` | 图片点击放大（在 `theme/index.ts` 的 `enhanceApp` 里挂载） |
+| `vitepress-plugin-rss` | 生成 RSS / Atom feed，替代 `vuepress-plugin-feed` |
+| `markdown-it-image-lazy-loading` | 给 `<img>` 自动加 `loading="lazy"`，替代 `vuepress-plugin-img-lazy` |
+
+### 通过 `head` 脚本注入的第三方能力
+
+- **百度统计**（`hm.baidu.com`）
+- **百度自动推送**（原 `vuepress-plugin-baidu-autopush`，改成一段内联 JS）
+- **Google Tag Manager**（GTM-WVS9HM6W）
+- **百度 / Bing 站长验证**：`baidu_verify_*.html` / `BingSiteAuth.xml` 放到 `.vitepress/public/`
+
+### 已移除 / 降级的能力
+
+| 旧能力 | 处理方式 |
+| --- | --- |
+| `vuepress-plugin-tags`（文章标签） | 暂不启用；后续如需可用 frontmatter + 自定义动态路由（`useData()`）实现 |
+| Algolia DocSearch | 占位保留在 `themeConfig.search`，待申请到 `appId/apiKey/indexName` 再启用；默认使用 VitePress 内置 local search（`search: { provider: 'local' }`） |
 
 ## 五、自定义构建脚本（原生 Node.js）
 
-`.vuepress/scripts/` 全部用 CommonJS 编写：
+`.vitepress/scripts/` 继续使用 CommonJS：
 
 | 脚本 | 作用 |
 | --- | --- |
-| `generateSidebar.js` | 扫描目录，自动生成侧边栏配置（递归处理目录） |
+| `generateSidebar.js` | 扫描目录自动生成 VitePress 侧边栏配置（输出 `text/link/items` 结构） |
 | `genReadme.js` | 自动生成 README 索引 |
 | `getMdNumber.js` | 统计 Markdown 文件数量 |
 | `formatMdContent.js` | 格式化 Markdown 内容 |
-| `send-email.js` | 部署完成邮件通知（用 nodemailer） |
+| `send-email.js` | 部署完成邮件通知（nodemailer） |
 
 ## 六、CI/CD（GitHub Actions）
 
 ### 1. `deploy.yml` — 构建与部署
 
-流水线：
+流水线（Node 16 → **Node 20 LTS**）：
 
 ```
-actions/checkout@v3
-  → setup-node@v3 (Node 16)
-  → npm install
-  → actions/cache@v3（缓存 ~/.npm）
-  → npm run docs:build
-  → cloudflare/wrangler-action@v3（wrangler pages deploy .vuepress/dist）
+actions/checkout@v4
+  → setup-node@v4 (Node 20)
+  → actions/cache@v4（缓存 ~/.npm）
+  → npm ci
+  → npm run docs:build         # 产物目录：.vitepress/dist
+  → cloudflare/wrangler-action@v3（wrangler pages deploy .vitepress/dist）
   → nodemailer 发邮件
 ```
 
 ### 2. `sync-vibe-coding-course.yml` — 增量同步
+
+（保持不变）
 
 - 用 `git diff --diff-filter=A/M/D` 抽出新增 / 修改 / 删除文件列表
 - 用 `jq` 构造 JSON（含 `repository` / `addedFileList` / `modifiedFileList` / `deletedFileList`）
@@ -94,19 +111,19 @@ actions/checkout@v3
 | 组件 | 说明 |
 | --- | --- |
 | Cloudflare Pages | 静态资源托管目标（全球 CDN + 自动 HTTPS + 预览环境） |
-| wrangler（官方 CLI） | 通过 `wrangler pages deploy .vuepress/dist --project-name=<project>` 推送构建产物 |
+| wrangler（官方 CLI） | `wrangler pages deploy .vitepress/dist --project-name=<project>` 推送构建产物 |
 | GitHub Secrets | `CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_ACCOUNT_ID` / `EMAIL_*` |
 | 自定义域名 | 在 Cloudflare Pages 控制台绑定并托管 DNS |
 | nodemailer | 部署成功邮件通知 |
 
 ## 八、SEO / 统计 / 站长工具
 
-- Google Analytics（GTM-WVS9HM6W）
-- 百度统计（`config.ts:44-52` 内嵌 `hm.baidu.com` 脚本）
-- 百度自动推送（插件）
+- Google Analytics（GTM-WVS9HM6W）— 通过 `head` 注入
+- 百度统计（`hm.baidu.com`）— 通过 `head` 注入
+- 百度自动推送 — 通过 `head` 注入内联脚本
 - 百度站长验证（`baidu_verify_codeva-hlChwhGcel.html`）
 - Bing 站长验证（`BingSiteAuth.xml`）
-- sitemap + RSS feed + SEO meta 三件套
+- sitemap（VitePress 内置） + RSS feed（`vitepress-plugin-rss`） + SEO meta（`transformHead`）三件套
 
 ## 九、内容组织
 
@@ -118,18 +135,18 @@ Markdown 内容按业务分目录：
 - `Vibe Coding 零基础教程/`
 - `translations/`
 
-图片放在 `image/` 与 `.vuepress/public/`。
+图片放在 `image/` 与 `.vitepress/public/`。
 
-## 十、NPM 脚本一览（`package.json:4-12`）
+## 十、NPM 脚本一览（`package.json`）
 
 | 命令 | 作用 |
 | --- | --- |
-| `npm run docs:dev` | 本地开发 |
-| `npm run docs:build` | 生产构建到 `.vuepress/dist/` |
+| `npm run docs:dev` | 本地开发（`vitepress dev .`） |
+| `npm run docs:build` | 生产构建到 `.vitepress/dist/`（`vitepress build .`） |
+| `npm run docs:preview` | 本地预览构建产物（`vitepress preview .`） |
 | `npm run generate:sidebar` | 自动生成侧边栏 |
 | `npm run generate:readme` | 自动生成 README |
 | `npm run getMdNumber` | 统计 MD 数量 |
-| `npm run serve` | 本地预览 `dist/`（用 `serve`） |
 
 ## 总览一图
 
@@ -140,10 +157,10 @@ Markdown 源文件
 自定义 Node 脚本（侧边栏 / README 自动生成）
       │
       ▼
-VuePress 1.9 + TS 配置 + 自定义 Vue 主题 + 11 个插件
+VitePress 1.6 + TS 配置 + Vue 3 SFC 自定义主题 + Vite 生态插件
       │
       ▼
-GitHub Actions（Node 16 + wrangler-action）
+GitHub Actions（Node 20 LTS + wrangler-action）
       │
       ▼
 Cloudflare Pages（静态托管 + 全球 CDN） ──► ai.nav.cn
@@ -151,4 +168,4 @@ Cloudflare Pages（静态托管 + 全球 CDN） ──► ai.nav.cn
       └─► nodemailer 邮件通知 + 后端增量同步（curl + jq）
 ```
 
-技术选型整体偏轻：无后端、无数据库、无框架升级负担，完全依赖静态站 + Cloudflare Pages + Actions 实现低成本内容站运营。
+技术选型整体偏轻：无后端、无数据库。相对旧版的改进：Vue 2 → Vue 3、Webpack → Vite、独立插件系统 → Vite 生态、Stylus → CSS 变量，构建更快、长期可维护性更好。

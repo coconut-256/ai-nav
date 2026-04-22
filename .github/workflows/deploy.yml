@@ -14,27 +14,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Setup Node.js 16
-        uses: actions/setup-node@v3
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
         with:
-          node-version: '16'
+          node-version: '20'
 
       - name: Cache npm
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-node16-${{ hashFiles('**/package-lock.json', '**/package.json') }}
+          key: ${{ runner.os }}-node20-${{ hashFiles('**/package-lock.json', '**/package.json') }}
           restore-keys: |
-            ${{ runner.os }}-node16-
+            ${{ runner.os }}-node20-
 
       - name: Install deps
-        run: npm install
+        run: npm ci
 
-      - name: Build VuePress site
+      - name: Build VitePress site
         run: npm run docs:build
 
       - name: Deploy to Cloudflare Pages
@@ -42,7 +42,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy .vuepress/dist --project-name=ai-nav --branch=${{ github.ref_name }}
+          command: pages deploy .vitepress/dist --project-name=ai-nav --branch=${{ github.ref_name }}
 
       - name: Send deploy notification email
         if: success()
@@ -56,4 +56,4 @@ jobs:
           SITE_URL: https://ai.nav.cn
           GIT_SHA: ${{ github.sha }}
           GIT_REF: ${{ github.ref_name }}
-        run: node .vuepress/scripts/send-email.js
+        run: node .vitepress/scripts/send-email.js

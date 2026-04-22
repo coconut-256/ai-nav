@@ -1,6 +1,7 @@
-import { generateSidebarConfig } from './scripts/generateSidebar'
+import type { DefaultTheme } from 'vitepress'
+import { generateSidebarConfig } from './scripts/generateSidebar.js'
 
-export const sidebar = {
+export const sidebar: DefaultTheme.Sidebar = {
   '/AI/': generateSidebarConfig('AI'),
   '/产品服务/': generateSidebarConfig('产品服务'),
   '/OpenClaw 保姆级教程/': generateSidebarConfig('OpenClaw 保姆级教程'),

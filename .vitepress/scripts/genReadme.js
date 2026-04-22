@@ -1,10 +1,13 @@
-const fs = require('fs')
-const path = require('path')
+import fs from 'node:fs'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 const ROOT = path.resolve(__dirname, '../../')
-const IGNORE = new Set(['.vuepress', 'node_modules', 'image', '.git', '.github'])
+const IGNORE = new Set(['.vuepress', '.vitepress', 'node_modules', 'image', '.git', '.github'])
 
-function walk (dir) {
+export function walk (dir) {
   const items = []
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
     if (e.name.startsWith('.') || IGNORE.has(e.name)) continue
@@ -15,7 +18,7 @@ function walk (dir) {
   return items.sort((a, b) => (a.type === b.type ? a.name.localeCompare(b.name, 'zh') : a.type === 'dir' ? -1 : 1))
 }
 
-function render (items, depth = 0, base = '') {
+export function render (items, depth = 0, base = '') {
   const lines = []
   const indent = '  '.repeat(depth)
   for (const it of items) {
@@ -31,7 +34,7 @@ function render (items, depth = 0, base = '') {
   return lines
 }
 
-function genForDir (absDir, dirName) {
+export function genForDir (absDir, dirName) {
   const tree = walk(absDir)
   const body = render(tree).join('\n')
   const header = `# ${dirName}\n\n> 本索引由 \`npm run generate:readme\` 自动生成，请勿手工编辑。\n\n`
@@ -47,6 +50,4 @@ function main () {
   }
 }
 
-if (require.main === module) main()
-
-module.exports = { walk, render, genForDir }
+if (import.meta.url === `file://${process.argv[1]}`) main()

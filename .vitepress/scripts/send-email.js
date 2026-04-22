@@ -1,6 +1,6 @@
-const nodemailer = require('nodemailer')
+import nodemailer from 'nodemailer'
 
-async function sendDeployMail () {
+export async function sendDeployMail () {
   const {
     EMAIL_HOST,
     EMAIL_PORT = '465',
@@ -47,8 +47,6 @@ async function sendDeployMail () {
   console.log('[send-email] deploy notification sent')
 }
 
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   sendDeployMail().catch(err => { console.error('[send-email] failed:', err); process.exit(1) })
 }
-
-module.exports = { sendDeployMail }

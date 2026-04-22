@@ -1,10 +1,13 @@
-const fs = require('fs')
-const path = require('path')
+import fs from 'node:fs'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 const ROOT = path.resolve(__dirname, '../../')
-const IGNORE = new Set(['.vuepress', 'node_modules', 'image', '.git', '.github'])
+const IGNORE = new Set(['.vuepress', '.vitepress', 'node_modules', 'image', '.git', '.github'])
 
-function walkMd (dir, out = []) {
+export function walkMd (dir, out = []) {
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
     if (e.name.startsWith('.') || IGNORE.has(e.name)) continue
     const abs = path.join(dir, e.name)
@@ -14,15 +17,11 @@ function walkMd (dir, out = []) {
   return out
 }
 
-function format (content) {
+export function format (content) {
   return content
-    // CRLF → LF
     .replace(/\r\n/g, '\n')
-    // 合并 3+ 连续空行为 2 个
     .replace(/\n{3,}/g, '\n\n')
-    // 去除行尾空白
     .split('\n').map(l => l.replace(/[\t ]+$/g, '')).join('\n')
-    // 文件末尾一个换行
     .replace(/\n*$/, '\n')
 }
 
@@ -40,6 +39,4 @@ function main () {
   console.log(`Formatted ${changed}/${files.length} markdown files`)
 }
 
-if (require.main === module) main()
-
-module.exports = { format, walkMd }
+if (import.meta.url === `file://${process.argv[1]}`) main()

@@ -1,9 +1,8 @@
-export const navbar = [
+import type { DefaultTheme } from 'vitepress'
+
+export const navbar: DefaultTheme.NavItem[] = [
   { text: '首页', link: '/' },
-  {
-    text: 'AI',
-    link: '/AI/'
-  },
+  { text: 'AI', link: '/AI/' },
   {
     text: '教程',
     items: [
