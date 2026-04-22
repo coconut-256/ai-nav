@@ -1,0 +1,45 @@
+{
+  "name": "ai-nav",
+  "version": "1.0.0",
+  "description": "可可耐特 AI 知识库 — 基于 VuePress 1.9 的纯静态文档站点",
+  "private": true,
+  "scripts": {
+    "docs:dev": "vuepress dev .",
+    "docs:build": "vuepress build .",
+    "generate:sidebar": "node .vuepress/scripts/generateSidebar.js",
+    "generate:readme": "node .vuepress/scripts/genReadme.js",
+    "getMdNumber": "node .vuepress/scripts/getMdNumber.js",
+    "format:md": "node .vuepress/scripts/formatMdContent.js",
+    "serve": "serve .vuepress/dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/coconut-256/ai-nav.git"
+  },
+  "homepage": "https://ai.nav.cn",
+  "author": "coconut-256",
+  "license": "MIT",
+  "dependencies": {
+    "nodemailer": "^6.9.13",
+    "vue": "^2.7.16"
+  },
+  "devDependencies": {
+    "@vuepress/plugin-back-to-top": "^1.9.10",
+    "@vuepress/plugin-google-analytics": "^1.9.10",
+    "@vuepress/plugin-medium-zoom": "^1.9.10",
+    "serve": "^14.2.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5",
+    "vuepress": "^1.9.10",
+    "vuepress-plugin-baidu-autopush": "^1.0.1",
+    "vuepress-plugin-code-copy": "^1.0.6",
+    "vuepress-plugin-feed": "^0.1.9",
+    "vuepress-plugin-img-lazy": "^1.0.3",
+    "vuepress-plugin-seo": "^0.1.4",
+    "vuepress-plugin-sitemap": "^2.3.1",
+    "vuepress-plugin-tags": "^1.0.2"
+  },
+  "engines": {
+    "node": ">=16"
+  }
+}

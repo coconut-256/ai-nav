@@ -1,0 +1,85 @@
+$contentWidth = 860px
+$sidebarWidth = 18rem
+$extraSidebarWidth = 15rem
+$navbarHeight = 3.6rem
+$accent = #27b1ff
+
+.theme-container
+  font-family "-apple-system", BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif
+  color #2c3e50
+  line-height 1.7
+
+  .navbar
+    position fixed
+    top 0
+    left 0
+    right 0
+    height $navbarHeight
+    background #fff
+    box-shadow 0 1px 4px rgba(0,0,0,.06)
+    z-index 20
+
+  .sidebar
+    position fixed
+    z-index 10
+    margin 0
+    top $navbarHeight
+    left 0
+    bottom 0
+    box-sizing border-box
+    border-right 1px solid #eaecef
+    overflow-y auto
+    width $sidebarWidth
+    background #fff
+
+  .page
+    padding-left $sidebarWidth
+    padding-right $extraSidebarWidth
+    padding-top $navbarHeight
+    min-height calc(100vh - $navbarHeight)
+
+  .extra-sidebar
+    position fixed
+    top $navbarHeight
+    right 0
+    bottom 0
+    width $extraSidebarWidth
+    overflow-y auto
+    padding 1.2rem 1rem
+    border-left 1px solid #eaecef
+    background #fff
+
+  .footer
+    border-top 1px solid #eaecef
+    padding 1.4rem 2rem
+    text-align center
+    color #7f8c8d
+    font-size .9rem
+
+@media (max-width: 1200px)
+  .theme-container
+    .extra-sidebar
+      display none
+    .page
+      padding-right 2rem
+
+@media (max-width: 960px)
+  .theme-container
+    .sidebar
+      transform translateX(-100%)
+      transition transform .25s ease
+    &.sidebar-open .sidebar
+      transform translateX(0)
+    .page
+      padding-left 0
+
+.sidebar-mask
+  position fixed
+  z-index 9
+  top 0
+  left 0
+  width 100vw
+  height 100vh
+  display none
+.sidebar-open .sidebar-mask
+  display block

@@ -1,0 +1,57 @@
+name: Sync Vibe Coding course to AI nav backend
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'Vibe Coding 零基础教程/**'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (with history)
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+
+      - name: Compute changed files
+        id: diff
+        shell: bash
+        run: |
+          set -e
+          BASE_SHA="${{ github.event.before }}"
+          HEAD_SHA="${{ github.sha }}"
+
+          added=$(git diff --name-only --diff-filter=A "$BASE_SHA" "$HEAD_SHA" -- 'Vibe Coding 零基础教程/' || true)
+          modified=$(git diff --name-only --diff-filter=M "$BASE_SHA" "$HEAD_SHA" -- 'Vibe Coding 零基础教程/' || true)
+          deleted=$(git diff --name-only --diff-filter=D "$BASE_SHA" "$HEAD_SHA" -- 'Vibe Coding 零基础教程/' || true)
+
+          to_json_array () { printf '%s\n' "$1" | grep -v '^$' | jq -R . | jq -s . ; }
+
+          ADDED_JSON=$(to_json_array "$added")
+          MODIFIED_JSON=$(to_json_array "$modified")
+          DELETED_JSON=$(to_json_array "$deleted")
+
+          PAYLOAD=$(jq -n \
+            --arg repository "${{ github.repository }}" \
+            --argjson addedFileList   "$ADDED_JSON" \
+            --argjson modifiedFileList "$MODIFIED_JSON" \
+            --argjson deletedFileList  "$DELETED_JSON" \
+            '{repository: $repository, addedFileList: $addedFileList, modifiedFileList: $modifiedFileList, deletedFileList: $deletedFileList}')
+
+          echo "payload<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$PAYLOAD"      >> "$GITHUB_OUTPUT"
+          echo "EOF"           >> "$GITHUB_OUTPUT"
+
+      - name: POST to backend
+        if: steps.diff.outputs.payload != ''
+        env:
+          SYNC_URL: ${{ secrets.SYNC_AI_GUIDE_URL }}
+          SYNC_TOKEN: ${{ secrets.SYNC_AI_GUIDE_TOKEN }}
+        run: |
+          curl -sS -X POST "$SYNC_URL" \
+            -H "Authorization: Bearer $SYNC_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '${{ steps.diff.outputs.payload }}' \
+            --fail-with-body
