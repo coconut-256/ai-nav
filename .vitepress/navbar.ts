@@ -11,6 +11,7 @@ export const navbar: DefaultTheme.NavItem[] = [
     ]
   },
   { text: '产品服务', link: '/产品服务/' },
+  { text: '红皮书', link: '/红皮书/Claude_Code_完全教程指南' },
   { text: '译文', link: '/translations/' },
   { text: 'GitHub', link: 'https://github.com/coconut-256/ai-nav' }
 ]

@@ -1,18 +1,8 @@
----
-home: true
-heroText: 可可耐特 AI 知识库
-tagline: AI · 编程 · 产品 · 教程 —— 开源共建的中文知识库
-actionText: 开始阅读 →
-actionLink: /AI/
-features:
-  - title: 内容分明
-    details: AI、产品、Vibe Coding、OpenClaw 四大主题，结构清晰易于导航。
-  - title: 开源共建
-    details: 仓库托管在 GitHub，任何人都可以通过 PR 修正与补充内容。
-  - title: 极速静态
-    details: VitePress + Vue 3 + Cloudflare Pages，全球 CDN 秒开。
-footer: © coconut-256 · MIT Licensed · https://ai.nav.cn
----
+# 可可耐特 AI 知识库（ai-nav）
+
+> 汇聚 AI、编程、产品、教程的可可耐特开源知识库 · <https://ai.nav.cn>
+
+基于 **VitePress + Vue 3 + Vite** 的纯静态文档站，由 Cloudflare Pages 托管。
 
 ## 快速开始（开发者）
 
@@ -41,6 +31,7 @@ npm run docs:preview  # 预览 .vitepress/dist/
 
 ```
 .
+├── index.md                    # 站点首页
 ├── AI/                         # AI 相关文章
 ├── 产品服务/                    # 产品与服务介绍
 ├── OpenClaw 保姆级教程/          # OpenClaw 教程

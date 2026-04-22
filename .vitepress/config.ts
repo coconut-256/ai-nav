@@ -16,7 +16,7 @@ export default defineConfig({
   lastUpdated: true,
   ignoreDeadLinks: true,
   outDir: '.vitepress/dist',
-  srcExclude: ['CLAUDE.md', '**/node_modules/**'],
+  srcExclude: ['CLAUDE.md', 'README.md', '**/node_modules/**'],
 
   head: [
     ['link', { rel: 'icon', href: '/favicon.ico' }],
