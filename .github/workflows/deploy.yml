@@ -9,40 +9,61 @@ concurrency:
   group: deploy-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  NODE_VERSION: '20'
+  BUILD_OUTPUT_DIR: .vitepress/dist
+  CLOUDFLARE_PAGES_PROJECT_NAME: ai-nav
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Setup Node.js 20
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-
-      - name: Cache npm
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node20-${{ hashFiles('**/package-lock.json', '**/package.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node20-
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
 
       - name: Install deps
-        run: npm ci
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
 
       - name: Build VitePress site
         run: npm run docs:build
 
+      - name: Verify build output
+        run: |
+          test -d "${BUILD_OUTPUT_DIR}"
+          ls -la "${BUILD_OUTPUT_DIR}" | sed -n '1,80p'
+
       - name: Deploy to Cloudflare Pages
+        id: deploy
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy .vitepress/dist --project-name=ai-nav --branch=${{ github.ref_name }}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          wranglerVersion: "4"
+          command: pages deploy ${{ env.BUILD_OUTPUT_DIR }} --project-name=${{ env.CLOUDFLARE_PAGES_PROJECT_NAME }}
+
+      - name: Print deployment URL
+        if: success()
+        run: |
+          echo "deployment-url=${{ steps.deploy.outputs.deployment-url }}"
+          echo "pages-alias-url=${{ steps.deploy.outputs.pages-deployment-alias-url }}"
 
       - name: Send deploy notification email
         if: success()

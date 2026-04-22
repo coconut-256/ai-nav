@@ -26,7 +26,7 @@
   "devDependencies": {
     "markdown-it-image-lazy-loading": "^1.0.0",
     "medium-zoom": "^1.1.0",
-    "nodemailer": "^6.9.13",
+    "nodemailer": "^8.0.5",
     "typescript": "^5.4.5",
     "vitepress": "^1.6.4",
     "vitepress-plugin-rss": "^0.4.3"
