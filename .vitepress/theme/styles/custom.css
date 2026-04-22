@@ -28,3 +28,138 @@
 .vp-doc div[class*='language-'] > button.copy:hover {
   background-color: var(--vp-c-brand-soft);
 }
+
+/* 红皮书卡片（用于 AI 频道首页等入口） */
+.vp-doc a.redbook-card {
+  display: block;
+  margin: 16px 0 24px;
+  padding: 20px 24px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #c0392b 0%, #8e1b12 100%);
+  color: #fff;
+  text-decoration: none;
+  box-shadow: 0 6px 20px rgba(192, 57, 43, 0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.vp-doc a.redbook-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(192, 57, 43, 0.35);
+  text-decoration: none;
+}
+.vp-doc a.redbook-card .redbook-card-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+}
+.vp-doc a.redbook-card .redbook-card-title {
+  margin-top: 12px;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #fff;
+}
+.vp-doc a.redbook-card .redbook-card-desc {
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.88);
+}
+.vp-doc a.redbook-card .redbook-card-cta {
+  margin-top: 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* 自定义大纲标题栏：隐藏 VitePress 默认的 outline-title，由 Layout.vue 渲染的 .outline-header 代替 */
+.VPDocAsideOutline .outline-title {
+  display: none;
+}
+
+/* 大纲链接允许换行，避免长标题被截断 */
+.VPDocAsideOutline .outline-link {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  line-height: 1.5;
+}
+
+/* 大纲折叠按钮（由 Layout.vue 在 onMounted 时动态注入） */
+.VPDocAsideOutline li {
+  position: relative;
+}
+.VPDocAsideOutline .outline-collapse {
+  position: absolute;
+  left: -14px;
+  top: 5px;
+  width: 14px;
+  height: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--vp-c-text-3);
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+.VPDocAsideOutline .outline-collapse:hover {
+  color: var(--vp-c-brand-1);
+}
+.VPDocAsideOutline li[data-outline-collapsed='1'] > .outline-collapse {
+  transform: rotate(-90deg);
+}
+.VPDocAsideOutline li[data-outline-collapsed='1'] > ul {
+  display: none;
+}
+
+/* 固定模式下加宽大纲列，降低遮挡 */
+@media (min-width: 960px) {
+  .VPDoc.has-aside .aside {
+    min-width: 288px;
+  }
+}
+
+/* 不固定模式：主内容撑满，aside 变右侧浮层，hover 触发条或 aside 时滑出 */
+@media (min-width: 960px) {
+  html.aside-unpinned .VPDoc.has-aside .content-container {
+    max-width: 100%;
+  }
+  html.aside-unpinned .VPDoc.has-aside .content {
+    padding-right: 0;
+  }
+  html.aside-unpinned .VPDoc.has-aside .aside {
+    position: fixed;
+    top: var(--vp-nav-height);
+    right: 0;
+    bottom: 0;
+    width: 288px;
+    max-width: 90vw;
+    padding: 24px 24px 32px;
+    margin: 0;
+    background: var(--vp-c-bg);
+    overflow-y: auto;
+    transform: translateX(100%);
+    opacity: 0;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.35s ease;
+    z-index: 30;
+  }
+  html.aside-unpinned:has(.aside-peek:hover) .VPDoc.has-aside .aside,
+  html.aside-unpinned .VPDoc.has-aside .aside:hover {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  html.aside-unpinned .VPDoc.has-aside .aside-container,
+  html.aside-unpinned .VPDoc.has-aside .aside-content {
+    position: static;
+    height: auto;
+    max-height: none;
+    padding: 0;
+  }
+}

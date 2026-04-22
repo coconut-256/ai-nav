@@ -121,7 +121,7 @@ export default defineConfig({
         log: true,
         filter: (post) => {
           const p = post.url || ''
-          return p.startsWith('/AI/') || p.startsWith('/Vibe Coding 零基础教程/')
+          return p.startsWith('/AI/')
         }
       })
     ]
@@ -132,7 +132,7 @@ export default defineConfig({
     siteTitle: SITE_TITLE,
     nav: navbar,
     sidebar,
-    outline: { level: [2, 6], label: '本页导航' },
+    outline: { level: [2, 6], label: '大纲' },
     lastUpdated: { text: '上次更新' },
 
     socialLinks: [
@@ -162,12 +162,8 @@ export default defineConfig({
     docFooter: { prev: '上一篇', next: '下一篇' },
     darkModeSwitchLabel: '外观',
     returnToTopLabel: '返回顶部',
-    sidebarMenuLabel: '菜单',
-
-    // 本项目自定义 footer 通过 theme/Layout.vue 的 layout-bottom 插槽渲染
-    footer: {
-      message: '',
-      copyright: `© ${new Date().getFullYear()} 可可耐特（coconut-256）`
-    }
+    sidebarMenuLabel: '菜单'
+    // 本项目自定义 footer 通过 theme/Layout.vue 的 layout-bottom 插槽渲染，
+    // 不再使用 themeConfig.footer，避免首页（无侧边栏）重复显示版权。
   }
 })

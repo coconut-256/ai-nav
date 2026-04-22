@@ -75,7 +75,7 @@ export function generateSidebarConfig (dirName) {
 
 // 命令行入口：打印各目录侧边栏
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const dirs = ['AI', '产品服务', 'OpenClaw 保姆级教程', 'Vibe Coding 零基础教程', 'translations']
+  const dirs = ['AI']
   const out = {}
   dirs.forEach(d => { out[`/${d}/`] = generateSidebarConfig(d) })
   console.log(JSON.stringify(out, null, 2))

@@ -16,8 +16,8 @@ hero:
       link: https://github.com/coconut-256/ai-nav
 
 features:
-  - title: 内容分明
-    details: AI、产品、Vibe Coding、OpenClaw 四大主题，结构清晰易于导航。
+  - title: 内容聚焦
+    details: 聚焦 AI 编程工具的系统化教程与工作流沉淀，专注做深一件事。
   - title: 开源共建
     details: 仓库托管在 GitHub，任何人都可以通过 PR 修正与补充内容。
   - title: 极速静态
