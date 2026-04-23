@@ -215,6 +215,7 @@
   object-fit: contain;
   background: #fff;
   padding: 6px;
+  cursor: zoom-in;
 }
 .home-community-label {
   font-size: 16px;

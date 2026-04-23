@@ -11,7 +11,7 @@ const route = useRoute()
 
 const applyZoom = () => {
   if (!inBrowser) return
-  mediumZoom('.vp-doc img:not(.no-zoom)', { background: 'rgba(0,0,0,0.75)' })
+  mediumZoom('.vp-doc img:not(.no-zoom), .home-community-card img', { background: 'rgba(0,0,0,0.85)' })
 }
 
 const STORAGE_KEY = 'ai-nav:aside-pinned'
