@@ -1,0 +1,72 @@
+- generic [ref=e3]:
+  - link "Skip to content" [ref=e4] [cursor=pointer]:
+    - /url: "#VPContent"
+  - banner:
+    - generic:
+      - generic:
+        - generic:
+          - link "可可耐特 AI 知识库" [ref=e6] [cursor=pointer]:
+            - /url: /
+            - generic [ref=e7]: 可可耐特 AI 知识库
+          - generic [ref=e8]:
+            - button "搜索文档" [ref=e11] [cursor=pointer]:
+              - generic [ref=e14]: 搜索文档
+              - generic [ref=e15]:
+                - generic [ref=e16]: ⌘
+                - generic [ref=e17]: K
+            - navigation "Main Navigation" [ref=e18]:
+              - generic [ref=e19]: Main Navigation
+              - link "首页" [ref=e20] [cursor=pointer]:
+                - /url: /
+                - generic [ref=e21]: 首页
+              - link "AI" [ref=e22] [cursor=pointer]:
+                - /url: /AI/
+                - generic [ref=e23]: AI
+              - link "WEB3" [ref=e24] [cursor=pointer]:
+                - /url: /WEB3/
+                - generic [ref=e25]: WEB3
+              - link "GitHub" [ref=e26] [cursor=pointer]:
+                - /url: https://github.com/coconut-256/ai-nav
+                - generic [ref=e27]: GitHub
+            - button "extra navigation" [ref=e29] [cursor=pointer]
+  - generic [ref=e32]:
+    - generic [ref=e34]:
+      - generic [ref=e35]:
+        - heading "可可耐特 AI 知识库" [level=1] [ref=e36]:
+          - generic [ref=e37]: 可可耐特 AI 知识库
+        - paragraph [ref=e38]: AI · 编程 · 产品 · 教程 —— 开源共建的中文知识库
+        - generic [ref=e39]:
+          - link "开始阅读 →" [ref=e41] [cursor=pointer]:
+            - /url: /AI/
+          - link "GitHub" [ref=e43] [cursor=pointer]:
+            - /url: https://github.com/coconut-256/ai-nav
+      - img "可可耐特" [ref=e47]
+    - generic [ref=e50]:
+      - article [ref=e53]:
+        - heading "内容聚焦" [level=2] [ref=e54]
+        - paragraph [ref=e55]: 聚焦 AI 编程工具的系统化教程与工作流沉淀，专注做深一件事。
+      - article [ref=e58]:
+        - heading "开源共建" [level=2] [ref=e59]
+        - paragraph [ref=e60]: 仓库托管在 GitHub，任何人都可以通过 PR 修正与补充内容。
+      - article [ref=e63]:
+        - heading "极速静态" [level=2] [ref=e64]
+        - paragraph [ref=e65]: VitePress + Vue 3 + Cloudflare Pages，全球 CDN 秒开。
+    - generic [ref=e69]:
+      - heading "加入社区" [level=2] [ref=e70]
+      - paragraph [ref=e71]: 扫码关注公众号获取最新动态，加入交流群与同好一起讨论 AI · 编程 · 产品
+      - generic [ref=e72]:
+        - generic [ref=e73]:
+          - img "可可耐特 公众号" [ref=e74]
+          - generic [ref=e75]: 微信公众号
+          - generic [ref=e76]: 关注获取最新 AI 教程与资讯
+        - generic [ref=e77]:
+          - img "可可耐特 交流群" [ref=e78]
+          - generic [ref=e79]: 微信交流群
+          - generic [ref=e80]: 扫码加入，一起交流学习
+  - contentinfo [ref=e81]:
+    - generic [ref=e82]:
+      - link "GitHub" [ref=e83] [cursor=pointer]:
+        - /url: https://github.com/coconut-256/ai-nav
+      - link "RSS" [ref=e84] [cursor=pointer]:
+        - /url: /feed.rss
+    - generic [ref=e85]: © 2026 可可耐特（coconut-256）
